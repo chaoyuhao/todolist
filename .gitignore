@@ -1,3 +1,5 @@
 /build
 build.gradle
 /lib/javafx-sdk-21.0.5
+/.gradle
+/gradle
