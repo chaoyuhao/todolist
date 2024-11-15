@@ -1,0 +1,267 @@
+package com.todolist.view;
+
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.collections.FXCollections;
+import com.todolist.model.Task;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class AddTaskView extends Stage {
+    private TextField titleField;
+    private DatePicker datePicker;
+    private ComboBox<LocalTime> timeComboBox;
+    private TextArea descriptionArea;
+    private ComboBox<String> colorComboBox;
+    private VBox tagsContainer;
+    private List<String> tags;
+    private Task resultTask;
+    private CheckBox isRecurringCheckBox;
+    private TextField recurringDaysField;
+    private TextField priorityField;
+
+    public AddTaskView() {
+        this.tags = new ArrayList<>();
+        initializeComponents();
+        setupLayout();
+        setupWindow();
+    }
+
+    private void initializeComponents() {
+        // 标题输入
+        titleField = new TextField();
+        titleField.setPromptText("输入任务标题");
+        titleField.getStyleClass().add("task-input");
+
+        // 日期选择
+        datePicker = new DatePicker(LocalDate.now());
+        datePicker.getStyleClass().add("task-date-picker");
+
+        // 时间选择
+        List<LocalTime> times = new ArrayList<>();
+        for (int hour = 0; hour < 24; hour++) {
+            times.add(LocalTime.of(hour, 0));
+            times.add(LocalTime.of(hour, 30));
+        }
+        timeComboBox = new ComboBox<>(FXCollections.observableArrayList(times));
+        timeComboBox.setValue(LocalTime.now().withMinute(0));
+        timeComboBox.getStyleClass().add("task-time-picker");
+
+        // 描述输入
+        descriptionArea = new TextArea();
+        descriptionArea.setPromptText("输入任务描述");
+        descriptionArea.setPrefRowCount(3);
+        descriptionArea.getStyleClass().add("task-description");
+
+        // 颜色选择
+        String[] colors = {"#4CAF50", "#2196F3", "#FFC107", "#E91E63", "#9C27B0"};
+        colorComboBox = new ComboBox<>(FXCollections.observableArrayList(colors));
+        colorComboBox.setValue(colors[0]);
+        colorComboBox.setCellFactory(list -> new ColorCell());
+        colorComboBox.setButtonCell(new ColorCell());
+        colorComboBox.getStyleClass().add("task-color-picker");
+
+        // Tags容器
+        tagsContainer = new VBox(5);
+        tagsContainer.getStyleClass().add("tags-container");
+
+        // 重复任务选择
+        isRecurringCheckBox = new CheckBox("循环任务");
+        recurringDaysField = new TextField();
+        recurringDaysField.setPromptText("循环天数");
+        recurringDaysField.setDisable(true);
+        recurringDaysField.getStyleClass().add("task-input");
+
+        // 设置循环任务复选框的监听器
+        isRecurringCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            recurringDaysField.setDisable(!newVal);
+        });
+
+        // 优先级输入
+        priorityField = new TextField("0");
+        priorityField.setPromptText("任务优先级");
+        priorityField.getStyleClass().add("task-input");
+
+        // 只允许输入整数
+        priorityField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("-?\\d*")) {
+                priorityField.setText(oldVal);
+            }
+        });
+    }
+
+    private void setupLayout() {
+        VBox mainContainer = new VBox(15);
+        mainContainer.setPadding(new Insets(20));
+        mainContainer.getStyleClass().add("add-task-container");
+
+        // 标题部分
+        Label titleLabel = new Label("任务标题");
+        mainContainer.getChildren().addAll(titleLabel, titleField);
+
+        // 日期和时间部分
+        HBox dateTimeBox = new HBox(10);
+        VBox dateBox = new VBox(5);
+        VBox timeBox = new VBox(5);
+        
+        dateBox.getChildren().addAll(new Label("日期"), datePicker);
+        timeBox.getChildren().addAll(new Label("时间"), timeComboBox);
+        dateTimeBox.getChildren().addAll(dateBox, timeBox);
+        mainContainer.getChildren().add(dateTimeBox);
+
+        // 描述部分
+        mainContainer.getChildren().addAll(new Label("描述"), descriptionArea);
+
+        // 颜色选择部分
+        mainContainer.getChildren().addAll(new Label("颜色"), colorComboBox);
+
+        // Tags部分
+        HBox tagInputBox = new HBox(10);
+        TextField tagInput = new TextField();
+        tagInput.setPromptText("添加标签");
+        Button addTagButton = new Button("+");
+        addTagButton.setOnAction(e -> addTag(tagInput.getText()));
+        tagInputBox.getChildren().addAll(tagInput, addTagButton);
+
+        mainContainer.getChildren().addAll(new Label("标签"), tagInputBox, tagsContainer);
+
+        // 循环任务设置部分
+        HBox recurringBox = new HBox(10);
+        VBox recurringContainer = new VBox(5);
+        recurringContainer.getChildren().addAll(isRecurringCheckBox, recurringDaysField);
+        recurringBox.getChildren().add(recurringContainer);
+        mainContainer.getChildren().add(recurringBox);
+
+        // 优先级部分
+        mainContainer.getChildren().addAll(new Label("优先级"), priorityField);
+
+        // 确认和取消按钮
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        Button confirmButton = new Button("确认");
+        Button cancelButton = new Button("取消");
+        
+        confirmButton.setOnAction(e -> createTask());
+        cancelButton.setOnAction(e -> close());
+        
+        buttonBox.getChildren().addAll(cancelButton, confirmButton);
+        mainContainer.getChildren().add(buttonBox);
+
+        // 设置场景
+        Scene scene = new Scene(mainContainer, 400, 600);
+        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
+        setScene(scene);
+    }
+
+    private void setupWindow() {
+        initModality(Modality.APPLICATION_MODAL);
+        setTitle("添加新任务");
+        setResizable(false);
+    }
+
+    private void addTag(String tag) {
+        if (tag != null && !tag.trim().isEmpty() && tags.size() < 5 && !tags.contains(tag)) {
+            tags.add(tag);
+            updateTagsDisplay();
+        }
+    }
+
+    private void updateTagsDisplay() {
+        tagsContainer.getChildren().clear();
+        for (String tag : tags) {
+            HBox tagBox = new HBox(5);
+            Label tagLabel = new Label(tag);
+            Button removeButton = new Button("×");
+            removeButton.setOnAction(e -> {
+                tags.remove(tag);
+                updateTagsDisplay();
+            });
+            tagBox.getChildren().addAll(tagLabel, removeButton);
+            tagsContainer.getChildren().add(tagBox);
+        }
+    }
+
+    private void createTask() {
+        if (titleField.getText().trim().isEmpty()) {
+            showAlert("请输入任务标题");
+            return;
+        }
+
+        // 验证循环天数
+        if (isRecurringCheckBox.isSelected() && recurringDaysField.getText().trim().isEmpty()) {
+            showAlert("请输入循环天数");
+            return;
+        }
+
+        // 获取优先级，默认为0
+        int priority;
+        try {
+            priority = priorityField.getText().trim().isEmpty() ? 
+                       0 : Integer.parseInt(priorityField.getText());
+        } catch (NumberFormatException e) {
+            showAlert("优先级必须是整数");
+            return;
+        }
+
+        LocalDate date = datePicker.getValue();
+        LocalTime time = timeComboBox.getValue();
+        Date dueDate = Date.from(date.atTime(time)
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        resultTask = new Task(
+            titleField.getText(),
+            descriptionArea.getText(),
+            dueDate,
+            priority,
+            Color.web(colorComboBox.getValue())
+        );
+        
+        resultTask.setIsRecurring(isRecurringCheckBox.isSelected());
+        if (isRecurringCheckBox.isSelected()) {
+            // TODO: 处理循环天数，这里需要在Task类中添加相应的属性
+            System.out.println("循环天数: " + recurringDaysField.getText());
+        }
+        
+        close();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("警告");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public Task getTask() {
+        return resultTask;
+    }
+
+    // 用于颜色选择框的自定义单元格
+    private static class ColorCell extends ListCell<String> {
+        @Override
+        protected void updateItem(String color, boolean empty) {
+            super.updateItem(color, empty);
+            if (empty || color == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                Rectangle rect = new Rectangle(20, 20);
+                rect.setFill(Color.web(color));
+                setGraphic(rect);
+            }
+        }
+    }
+} 

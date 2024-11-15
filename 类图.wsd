@@ -1,0 +1,99 @@
+@startuml classmap
+
+class Color {
+    +String hexCode
+    +String name
+}
+
+class Task {
+    +String taskId
+    +String title
+    +String description
+    +Date dueDate
+    +Boolean isRecurring
+    +Boolean isCompleted
+    +int priority
+    +List<String> tags
+    +Color displayColor
+    +void addTask()
+    +void deleteTask()
+    +void markAsComplete()
+    +void updateTask()
+    +Task getDetails()
+}
+
+class TaskManager {
+    +List<Task> tasks
+    +void addTask(Task task)
+    +void removeTask(String taskId)
+    +Task getTask(String taskId)
+    +List<Task> getAllTasks()
+    +List<Task> getRecurringTasks()
+    +List<Task> getTaskByDate(Date date)
+}
+
+class Reminder {
+    + String taskId
+    + Date reminderTime
+    + void setReminder(Task task)
+    + void cancelReminder()
+    + void notifyUser()
+}
+
+
+class UI {
+    - View mainView
+    - View calendarView
+    - View taskDetailsView
+    - View currentView
+    - View loginView
+    + void displayTasks(List<Task> tasks)
+    + void showTaskDetails(Task task)
+    + void switchView(View view)
+}
+
+class View {
+    - String viewname
+    - List<UIElement> elements
+    + {static} void displayView(View view)
+    + {static} View createView(String viewname)
+    + void addElement(UIElement element)
+    + void removeElement(UIElement element)
+    + void updateElement(UIElement element, String newContent)
+    + void display()
+}
+
+class UIElement {
+    - String elementId
+    - String elementType
+    - String content
+    - Color color
+    - int positionX
+    - int positionY
+    - int width
+    - int height
+    + {static} UIElement createElement(String elementType, String content, Color color, int x, int y, int width, int height)
+    + void click()
+    + void display()
+    + void setPosition(int x, int y)
+    + void scale(int factor)
+    + void updateContent(String newContent)
+}
+
+class Notification {
+    +String notificationId
+    +Date notificationTime
+    +void sendNotification()
+}
+
+UI --> TaskManager : uses >
+UI --> View : contains >
+Notification --> TaskManager : notifies >
+Reminder ..> Notification : triggers >
+Task --> Reminder : associates >
+TaskManager --> Task : manages >
+View --> UIElement : contains >
+
+Task --> Color : uses >
+
+@enduml

@@ -1,0 +1,272 @@
+/* 全局样式 */
+.root {
+    -fx-font-family: "Microsoft YaHei", "SimSun";
+    -fx-font-size: 14px;
+    -fx-background-color: #f5f5f5;
+}
+
+/* Frame相关样式 */
+.frame {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}
+
+/* MainFrame样式 */
+.main-frame {
+    -fx-background-color: white;
+}
+
+/* SidebarFrame样式 */
+.sidebar-frame {
+    -fx-background-color: #2c3e50;
+    -fx-min-width: 250px;
+    -fx-pref-width: 250px;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px 15px;
+    -fx-min-width: 230px;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+}
+
+/* CalendarFrame样式 */
+.calendar-frame {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+}
+
+.calendar-header {
+    -fx-background-color: #4CAF50;
+    -fx-padding: 10px;
+}
+
+.calendar-cell {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-padding: 5px;
+}
+
+/* Mission相关样式 */
+.mission-item {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.mission-group {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/* 任务状态样式 */
+.mission-status-todo {
+    -fx-background-color: #ffc107;
+}
+
+.mission-status-doing {
+    -fx-background-color: #17a2b8;
+}
+
+.mission-status-done {
+    -fx-background-color: #28a745;
+}
+
+/* 通用按钮样式 */
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.button:pressed {
+    -fx-background-color: #3d8b40;
+}
+
+/* 重复任务标记样式 */
+.repeat-mission-badge {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 10px;
+}
+
+/* 输入框样式 */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px 10px;
+}
+
+.text-field:focused {
+    -fx-border-color: #80bdff;
+    -fx-effect: dropshadow(gaussian, rgba(0,123,255,0.25), 0, 0, 0, 0);
+}
+
+/* 滚动面板样式 */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+/* MainView样式 */
+.main-view {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+}
+
+.main-title {
+    -fx-font-size: 64px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.time-label {
+    -fx-font-size: 36px;
+    -fx-text-fill: #666666;
+}
+
+.top-container {
+    -fx-alignment: center;
+    -fx-padding: 20px;
+}
+
+.button-container {
+    -fx-alignment: center;
+    -fx-padding: 40px;
+}
+
+.main-button {
+    -fx-min-width: 150px;
+    -fx-min-height: 150px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 75px;
+    -fx-background-color: #FFD700;
+    -fx-text-fill: #2c3e50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 0);
+    -fx-transition: -fx-scale-x 0.3s, -fx-scale-y 0.3s;
+}
+
+.main-button:hover {
+    -fx-background-color: #FFE55C;
+    -fx-cursor: hand;
+}
+
+.main-button:pressed {
+    -fx-background-color: #F7CA18;
+}
+
+.main-button-enlarged {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+/* AddTaskView样式 */
+.add-task-container {
+    -fx-background-color: white;
+}
+
+.task-input {
+    -fx-pref-width: 300px;
+}
+
+.task-date-picker {
+    -fx-pref-width: 150px;
+}
+
+.task-time-picker {
+    -fx-pref-width: 100px;
+}
+
+.task-description {
+    -fx-pref-width: 300px;
+}
+
+.task-color-picker {
+    -fx-pref-width: 150px;
+}
+
+.tags-container {
+    -fx-spacing: 5;
+    -fx-padding: 5;
+}
+
+.tags-container .button {
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-background-color: #e0e0e0;
+}
+
+.tags-container .label {
+    -fx-padding: 3 8;
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 10;
+}
+
+.recurring-container {
+    -fx-spacing: 5;
+    -fx-padding: 5;
+}
+
+.priority-input {
+    -fx-pref-width: 100px;
+}
+
+/* AddTaskView的滚动面板样式 */
+.add-task-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-fit-to-width: true;
+    -fx-padding: 0;
+}
+
+.add-task-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.add-task-scroll-pane > .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 5;
+}
+
+.add-task-scroll-pane > .scroll-bar:vertical > .track {
+    -fx-background-color: transparent;
+}
+
+.add-task-scroll-pane > .scroll-bar:vertical > .thumb {
+    -fx-background-color: #c1c1c1;
+    -fx-background-radius: 5px;
+}
+
+.add-task-scroll-pane > .scroll-bar:vertical > .increment-button,
+.add-task-scroll-pane > .scroll-bar:vertical > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+ 
