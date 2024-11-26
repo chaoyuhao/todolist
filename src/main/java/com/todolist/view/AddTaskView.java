@@ -29,7 +29,7 @@ public class AddTaskView extends Stage {
     private Task resultTask;
     private CheckBox isRecurringCheckBox;
     private TextField recurringDaysField;
-    private TextField priorityField;
+    private Slider prioritySlider;
 
     public AddTaskView() {
         this.tags = new ArrayList<>();
@@ -61,7 +61,8 @@ public class AddTaskView extends Stage {
         // 描述输入
         descriptionArea = new TextArea();
         descriptionArea.setPromptText("输入任务描述");
-        descriptionArea.setPrefRowCount(3);
+        descriptionArea.setPrefRowCount(6);
+        descriptionArea.setWrapText(true);
         descriptionArea.getStyleClass().add("task-description");
 
         // 颜色选择
@@ -88,15 +89,23 @@ public class AddTaskView extends Stage {
             recurringDaysField.setDisable(!newVal);
         });
 
-        // 优先级输入
-        priorityField = new TextField("0");
-        priorityField.setPromptText("任务优先级");
-        priorityField.getStyleClass().add("task-input");
+        // 优先级滑动条
+        prioritySlider = new Slider(0, 10, 0); // 设置滑动条范围为0到10，初始值为0
+        prioritySlider.setShowTickLabels(true);
+        prioritySlider.setShowTickMarks(true);
+        prioritySlider.setMajorTickUnit(1);
+        prioritySlider.setBlockIncrement(1);
+        
+        // 优先级标签
+        Label priorityLabel = new Label("优先级: " + (int) prioritySlider.getValue());
+        prioritySlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            priorityLabel.setText("优先级: " + newVal.intValue());
+        });
 
         // 只允许输入整数
-        priorityField.textProperty().addListener((obs, oldVal, newVal) -> {
+        recurringDaysField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("-?\\d*")) {
-                priorityField.setText(oldVal);
+                recurringDaysField.setText(oldVal);
             }
         });
     }
@@ -144,7 +153,7 @@ public class AddTaskView extends Stage {
         mainContainer.getChildren().add(recurringBox);
 
         // 优先级部分
-        mainContainer.getChildren().addAll(new Label("优先级"), priorityField);
+        mainContainer.getChildren().addAll(prioritySlider, new Label("优先级: 0"));
 
         // 确认和取消按钮
         HBox buttonBox = new HBox(10);
@@ -158,8 +167,15 @@ public class AddTaskView extends Stage {
         buttonBox.getChildren().addAll(cancelButton, confirmButton);
         mainContainer.getChildren().add(buttonBox);
 
+        ScrollPane scrollPane = new ScrollPane(mainContainer);
+        scrollPane.setFitToHeight(true);
+        scrollPane.getStyleClass().add("add-task-scroll-pane");
+
+        VBox scrollPaneScene = new VBox();
+        scrollPaneScene.getChildren().add(scrollPane);
+
         // 设置场景
-        Scene scene = new Scene(mainContainer, 400, 600);
+        Scene scene = new Scene(scrollPaneScene, 400, 600);
         scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
         setScene(scene);
     }
@@ -205,14 +221,7 @@ public class AddTaskView extends Stage {
         }
 
         // 获取优先级，默认为0
-        int priority;
-        try {
-            priority = priorityField.getText().trim().isEmpty() ? 
-                       0 : Integer.parseInt(priorityField.getText());
-        } catch (NumberFormatException e) {
-            showAlert("优先级必须是整数");
-            return;
-        }
+        int priority = (int) prioritySlider.getValue(); // 从滑动条获取优先级
 
         LocalDate date = datePicker.getValue();
         LocalTime time = timeComboBox.getValue();

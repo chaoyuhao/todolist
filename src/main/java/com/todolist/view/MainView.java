@@ -1,6 +1,8 @@
 package com.todolist.view;
 
 import com.todolist.model.Task;
+import com.todolist.model.TaskManager;
+import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -44,11 +46,7 @@ public class MainView extends BorderPane {
         addTaskButton.getStyleClass().add("main-button");
         taskListButton.getStyleClass().add("main-button");
         
-        // 为按钮添加点击动画效果
-        setupButtonAnimation(calendarButton);
-        setupButtonAnimation(addTaskButton);
-        setupButtonAnimation(taskListButton);
-        
+        // 为按钮添加点击事件
         addTaskButton.setOnAction(e -> {
             AddTaskView addTaskView = new AddTaskView();
             addTaskView.showAndWait();
@@ -57,17 +55,18 @@ public class MainView extends BorderPane {
             if (newTask != null) {
                 // TODO: 处理新创建的任务
                 System.out.println("新建任务: " + newTask);
+                TaskManager.getInstance().addTask(newTask);
             }
         });
-    }
-    
-    private void setupButtonAnimation(Button button) {
-        button.setOnMousePressed(e -> {
-            button.getStyleClass().add("main-button-enlarged");
+
+        taskListButton.setOnAction(e -> {
+            TaskListView taskListView = new TaskListView(this);
+            setCenter(taskListView);
         });
-        
-        button.setOnMouseReleased(e -> {
-            button.getStyleClass().remove("main-button-enlarged");
+
+        // 为日历按钮添加事件（如果需要）
+        calendarButton.setOnAction(e -> {
+            // TODO: 添加日历视图的逻辑
         });
     }
     
@@ -78,14 +77,13 @@ public class MainView extends BorderPane {
         topContainer.getChildren().addAll(titleLabel, timeLabel);
         
         // 创建按钮容器
-        HBox buttonContainer = new HBox(40); // 增加按钮之间的间距
-        buttonContainer.getStyleClass().add("button-container");
-        buttonContainer.setAlignment(javafx.geometry.Pos.CENTER); // 确保按钮居中对齐
+        HBox buttonContainer = new HBox(10); // 10px spacing
         buttonContainer.getChildren().addAll(calendarButton, addTaskButton, taskListButton);
+        buttonContainer.setAlignment(Pos.CENTER); // 居中对齐按钮
         
         // 设置布局
         setTop(topContainer);
-        setCenter(buttonContainer);
+        setCenter(buttonContainer); // 将按钮容器设置为中心内容
         
         // 添加整体样式
         getStyleClass().add("main-view");

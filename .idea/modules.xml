@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/todoFX.iml" filepath="$PROJECT_DIR$/.idea/modules/todoFX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/todoFX.main.iml" filepath="$PROJECT_DIR$/.idea/modules/todoFX.main.iml" />
     </modules>
   </component>
 </project>

@@ -4,12 +4,16 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import com.todolist.view.MainView;
+import com.todolist.model.TaskManager;
 
 public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
         try {
+            // 初始化TaskManager
+            TaskManager.getInstance();
+            
             MainView mainView = new MainView();
             Scene scene = new Scene(mainView, 1200, 800);
             

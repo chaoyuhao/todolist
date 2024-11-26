@@ -1,19 +1,51 @@
 package com.todolist.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import javafx.scene.paint.Color;
+import lombok.Getter;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class Task {
+    // Getters and Setters
+    @Expose
+    @SerializedName("taskId")
     private String taskId;
+    
+    @Expose
+    @SerializedName("title")
     private String title;
+    
+    @Expose
+    @SerializedName("description")
     private String description;
+    
+    @Expose
+    @SerializedName("dueDate")
     private Date dueDate;
+    
+    @Expose
+    @SerializedName("isRecurring")
     private Boolean isRecurring;
+    
+    @Expose
+    @SerializedName("isCompleted")
     private Boolean isCompleted;
+    
+    @Expose
+    @SerializedName("priority")
     private int priority;
+    
+    @Expose
+    @SerializedName("tags")
     private List<String> tags;
+    
+    @Expose
+    @SerializedName("displayColor")
     private Color displayColor;
     
     // 构造函数
@@ -27,72 +59,36 @@ public class Task {
         this.isRecurring = false;
         this.isCompleted = false;
     }
-    
-    // Getters and Setters
-    public String getTaskId() {
-        return taskId;
-    }
-    
-    public String getTitle() {
-        return title;
-    }
-    
+
+
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    public String getDescription() {
-        return description;
-    }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    public Date getDueDate() {
-        return dueDate;
-    }
-    
+
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
-    
-    public Boolean getIsRecurring() {
-        return isRecurring;
-    }
-    
+
     public void setIsRecurring(Boolean recurring) {
         isRecurring = recurring;
     }
-    
-    public Boolean getIsCompleted() {
-        return isCompleted;
-    }
-    
+
     public void setIsCompleted(Boolean completed) {
         isCompleted = completed;
     }
-    
-    public int getPriority() {
-        return priority;
-    }
-    
+
     public void setPriority(int priority) {
         this.priority = priority;
     }
-    
-    public List<String> getTags() {
-        return tags;
-    }
-    
+
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
-    
-    public Color getDisplayColor() {
-        return displayColor;
-    }
-    
+
     public void setDisplayColor(Color displayColor) {
         this.displayColor = displayColor;
     }
