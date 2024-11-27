@@ -1,0 +1,108 @@
+@startuml
+package com.todolist.model {
+    class Task {
+        +String title
+        +String description
+        +Date dueDate
+        +int priority
+        +Color displayColor
+        +Boolean isRecurring
+        +Boolean isCompleted
+        +String getTaskId()
+        +String getTitle()
+        +String getDescription()
+        +Date getDueDate()
+        +Boolean getIsRecurring()
+        +Boolean getIsCompleted()
+        +int getPriority()
+        +List<String> getTags()
+        +Color getDisplayColor()
+    }
+
+    class TaskManager {
+        -List<Task> tasks
+        -TaskManager instance
+        -String SAVE_PATH
+        -Gson gson
+        +TaskManager getInstance()
+        +void loadTasks()
+        +void sync()
+        +void addTask(Task task)
+        +void removeTask(String taskId)
+        +Task getTask(String taskId)
+        +List<Task> getAllTasks()
+        +List<Task> getTasksForDate(LocalDate date)
+        +List<Task> getRecurringTasks()
+    }
+
+}
+
+package com.todolist.view {
+    class MainView {
+        +Button calendarButton
+        +Button addTaskButton
+        +Button taskListButton
+        +void refreshTasks()
+        +void reloadButtons()
+    }
+
+    class TaskListView {
+        +VBox activeTasksContainer
+        +VBox completedTasksContainer
+        +void loadTasks()
+        -void initializeComponents()
+        -void setupLayout()
+        -VBox createTaskContainer()
+        -void loadTasks()
+        -void updateTaskDisplay(List<Task> taskList)   
+    }
+
+    class TaskItemView {
+        -Task task
+        +void TaskItemView(Task task)
+    }
+
+    class CalendarView {
+        +GridPane calendarGrid
+        +LocalDate currentDate
+        +Label monthLabel
+        -void initiallizeCanlendar()
+        -void fillCalendarGrid()
+        -void displayTasksForDate(LocalDate date, Label dateLabel)
+        -void changeMonth(int increment)
+        -void updateMonthLabel()
+    }
+
+    class AddTaskView {
+        -TextField titleField
+        -DatePicker datePicker
+        -ComboBox<LocalTime> timeComboBox
+        -TextArea descriptionArea
+        -ComboBox<String> colorComboBox
+        -VBox tagsContainer
+        -List<String> tags
+        -Task resultTask
+        -CheckBox isRecurringCheckBox
+        -TextField recurringDaysField
+        -Slider prioritySlider
+        -void initializeComponents()
+        -void setupLayout()
+        -void setupWindow()
+        -void addTag(String tag)
+        -void updateTagsDisplay()
+        -void createTask()
+        -void showAlert(String message)
+        +Task getTask()
+    }
+}
+
+MainView --> TaskListView : uses
+MainView --> CalendarView : uses
+MainView --> AddTaskView : uses(getTask())
+TaskListView --> TaskManager : uses
+CalendarView --> TaskManager : uses
+TaskManager --> Task : manages
+AddTaskView --> Task : creates
+TaskItemView *-- TaskListView : displays(click button)
+
+@enduml

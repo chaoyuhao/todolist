@@ -3,6 +3,7 @@ package com.todolist.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import lombok.Getter;
 
 import java.util.Date;
@@ -123,4 +124,8 @@ public class Task {
                 ", priority=" + priority +
                 '}';
     }
-} 
+
+    public Paint getColor() {
+        return this.displayColor;
+    }
+}

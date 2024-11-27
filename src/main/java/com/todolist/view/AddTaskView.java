@@ -255,6 +255,8 @@ public class AddTaskView extends Stage {
     }
 
     public Task getTask() {
+        // TODO : 处理任务的获取
+        System.out.println("获取任务" + resultTask);
         return resultTask;
     }
 
