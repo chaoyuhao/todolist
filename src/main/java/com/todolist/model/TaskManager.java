@@ -214,13 +214,29 @@ public class TaskManager {
     }
 
     public List<Task> getAlart() {
+        loadTasks();
+        System.out.println("alart task->" + tasks);
 
         return tasks.stream()
             .filter(task -> {
                 LocalDate taskDate = task.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 return taskDate.isEqual(LocalDate.now());
-            }).filter(Task::getIsCompleted)
+            }).filter(task -> {
+                    return !task.getIsCompleted();
+                })
             .collect(Collectors.toList());
+    }
+
+    public List<Task> getTags(List<String> tags) {
+        if(tags.size() > 1) {
+            // TODO : 加入多个标签筛选的功能
+            System.out.println("not impl");
+        }
+        loadTasks();
+        String name = tags.get(0);
+        return tasks.stream().filter(task -> {
+                return task.getTags().contains(name);
+            }).collect(Collectors.toList());
     }
 
     public void completeTask(String taskId) {

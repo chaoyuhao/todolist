@@ -1,6 +1,7 @@
 package com.todolist.view;
 
 import com.todolist.model.TaskManager;
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.Insets;
@@ -22,8 +23,11 @@ public class TaskListView extends VBox {
     private TitledPane completedTasksPane;
     private ObservableList<Task> tasks;
     private MainView mainView; // 添加 MainView 的引用
+    private TextField searchField; // 搜索框
+    private Button archiveButton; // 归档按钮
 
-    public TaskListView(MainView mainView) { // 修改构造函数以接收 MainView 的引用
+
+    public TaskListView(MainView mainView) {
         this.mainView = mainView; // 保存 MainView 的引用
         this.tasks = FXCollections.observableArrayList();
         initializeComponents();
@@ -43,6 +47,15 @@ public class TaskListView extends VBox {
         // 创建可折叠的已完成任务面板
         completedTasksPane = new TitledPane("已完成任务", completedTasksContainer);
         completedTasksPane.setExpanded(false);
+        
+        // 搜索框
+        searchField = new TextField();
+        searchField.setPromptText("输入标签搜索任务");
+        
+        // 归档按钮
+        archiveButton = new Button("搜索标签");
+        archiveButton.setOnAction(e -> searchTasks());
+
     }
 
     private void setupLayout() {
@@ -61,14 +74,19 @@ public class TaskListView extends VBox {
             mainView.refreshTasks(); // 刷新任务列表
             mainView.reloadButtons();
         });
-
+        
+        // 创建按钮容器
+        HBox buttonContainer = new HBox(10, backButton, searchField, archiveButton);
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setSpacing(10);
+        
         // 创建滚动面板
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(createTaskContainer());
         scrollPane.setFitToWidth(true); // 适应宽度
         scrollPane.setFitToHeight(true); // 适应高度
-
-        getChildren().addAll(backButton, titleLabel, scrollPane);
+        
+        getChildren().addAll(titleLabel, buttonContainer, scrollPane);
     }
 
     private VBox createTaskContainer() {
@@ -80,10 +98,24 @@ public class TaskListView extends VBox {
     private void loadTasks() {
         // 从TaskManager获取任务并排序
         List<Task> sortedTasks = TaskManager.getInstance().getAllTasks().stream()
-            .sorted(Comparator.comparing(Task::getDueDate)).sorted(Comparator.comparingInt(Task::getPriority))
+            .sorted(Comparator.comparing(Task::getDueDate)).sorted(Comparator.comparingInt(Task::getPriority).reversed())
             .collect(Collectors.toList());
             
         updateTaskDisplay(sortedTasks);
+    }
+
+    private void searchTasks() {
+        String searchText = searchField.getText().trim();
+        if (searchText.isEmpty()) {
+            loadTasks(); // 如果搜索框为空，加载所有任务
+        } else {
+            List<Task> filteredTasks = TaskManager.getInstance().getTags(List.of(searchText));
+            updateTaskDisplay(filteredTasks);
+        }
+    }
+
+    private void archiveTasks() {
+        // TODO: 归档逻辑
     }
 
     private void updateTaskDisplay(List<Task> taskList) {

@@ -21,7 +21,7 @@ import java.util.List;
 public class AddTaskView extends Stage {
     private TextField titleField;
     private DatePicker datePicker;
-    private ComboBox<LocalTime> timeComboBox;
+    private ComboBox<LocalTime> hourComboBox, minuteComboBox;
     private TextArea descriptionArea;
     private ComboBox<String> colorComboBox;
     private VBox tagsContainer;
@@ -49,14 +49,17 @@ public class AddTaskView extends Stage {
         datePicker.getStyleClass().add("task-date-picker");
 
         // 时间选择
-        List<LocalTime> times = new ArrayList<>();
-        for (int hour = 0; hour < 24; hour++) {
-            times.add(LocalTime.of(hour, 0));
-            times.add(LocalTime.of(hour, 30));
+        hourComboBox = new ComboBox<>();
+        minuteComboBox = new ComboBox<>();
+        for (int i=0; i<24; i++) {
+            hourComboBox.getItems().add(LocalTime.of(i, 0));
         }
-        timeComboBox = new ComboBox<>(FXCollections.observableArrayList(times));
-        timeComboBox.setValue(LocalTime.now().withMinute(0));
-        timeComboBox.getStyleClass().add("task-time-picker");
+        for (int i=0; i<60; i++) {
+            minuteComboBox.getItems().add(LocalTime.of(0, i));
+        }
+        hourComboBox.getStyleClass().add("task-time-picker");
+        minuteComboBox.getStyleClass().add("task-time-picker");
+
 
         // 描述输入
         descriptionArea = new TextArea();
@@ -122,11 +125,14 @@ public class AddTaskView extends Stage {
         // 日期和时间部分
         HBox dateTimeBox = new HBox(10);
         VBox dateBox = new VBox(5);
-        VBox timeBox = new VBox(5);
+        VBox hourBox = new VBox(3);
+        VBox minuteBox = new VBox(3);
         
         dateBox.getChildren().addAll(new Label("日期"), datePicker);
-        timeBox.getChildren().addAll(new Label("时间"), timeComboBox);
-        dateTimeBox.getChildren().addAll(dateBox, timeBox);
+        hourBox.getChildren().addAll(new Label("小时"), hourComboBox);
+        minuteBox.getChildren().addAll(new Label("分钟"), minuteComboBox);
+
+        dateTimeBox.getChildren().addAll(dateBox, hourBox, minuteBox);
         mainContainer.getChildren().add(dateTimeBox);
 
         // 描述部分
@@ -230,8 +236,9 @@ public class AddTaskView extends Stage {
         int priority = (int) prioritySlider.getValue(); // 从滑动条获取优先级
 
         LocalDate date = datePicker.getValue();
-        LocalTime time = timeComboBox.getValue();
-        Date dueDate = Date.from(date.atTime(time)
+        LocalTime hour = hourComboBox.getValue();
+        LocalTime min = minuteComboBox.getValue();
+        Date dueDate = Date.from(date.atTime(LocalTime.of(hour.getHour(), min.getMinute()))
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 

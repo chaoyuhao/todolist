@@ -24,6 +24,8 @@ public class TaskDetailView extends Stage {
         // 任务描述
         Label descriptionLabel = new Label("描述: " + task.getDescription());
 
+        Label taskTags = new Label("任务标签: " + task.getTags());
+
         // 到期日期
         Label dueDateLabel = new Label("到期日期: " + task.getDueDate());
 
@@ -40,9 +42,14 @@ public class TaskDetailView extends Stage {
         Button closeButton = new Button("关闭");
         closeButton.setOnAction(e -> close());
 
-        mainContainer.getChildren().addAll(titleLabel, descriptionLabel, dueDateLabel, priorityLabel, recurringLabel, completedLabel, closeButton);
-        Scene scene = new Scene(mainContainer, 300, 250);
-        setScene(scene);
+        mainContainer.getChildren().addAll(titleLabel, descriptionLabel, taskTags, dueDateLabel, priorityLabel, recurringLabel, completedLabel, closeButton);
+        //Scene scene = new Scene(mainContainer, 350, 300);
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(mainContainer);
+        scrollPane.setFitToHeight(true);
+        Scene scene2 = new Scene(scrollPane, 350, 300);
+        setScene(scene2);
     }
 
     private void setupWindow() {
