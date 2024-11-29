@@ -24,6 +24,7 @@ public class AlertView extends Stage {
         mainContainer.setPadding(new Insets(20));
         mainContainer.setAlignment(Pos.TOP_LEFT);
 
+        System.out.println("alart content->" + tasks);
         for (Task task : tasks) {
             VBox taskBox = new VBox(5);
             taskBox.setPadding(new Insets(10));

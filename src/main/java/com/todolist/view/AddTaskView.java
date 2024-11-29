@@ -140,7 +140,10 @@ public class AddTaskView extends Stage {
         TextField tagInput = new TextField();
         tagInput.setPromptText("添加标签");
         Button addTagButton = new Button("+");
-        addTagButton.setOnAction(e -> addTag(tagInput.getText()));
+        addTagButton.setOnAction(e -> {
+            addTag(tagInput.getText());
+            tagInput.setText("");
+        });
         tagInputBox.getChildren().addAll(tagInput, addTagButton);
 
         mainContainer.getChildren().addAll(new Label("标签"), tagInputBox, tagsContainer);
@@ -188,8 +191,11 @@ public class AddTaskView extends Stage {
 
     private void addTag(String tag) {
         if (tag != null && !tag.trim().isEmpty() && tags.size() < 5 && !tags.contains(tag)) {
+            System.out.println("add tags->" + tag);
             tags.add(tag);
             updateTagsDisplay();
+        }else {
+            showAlert("非法标签");
         }
     }
 
@@ -229,11 +235,14 @@ public class AddTaskView extends Stage {
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 
+
+        System.out.println("新建任务" + tags);
         resultTask = new Task(
             titleField.getText(),
             descriptionArea.getText(),
             dueDate,
             priority,
+            tags,
             Color.web(colorComboBox.getValue())
         );
         

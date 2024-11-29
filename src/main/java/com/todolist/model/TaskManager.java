@@ -165,8 +165,9 @@ public class TaskManager {
             Date dueDate = context.deserialize(jsonObject.get("dueDate"), Date.class);
             int priority = jsonObject.get("priority").getAsInt();
             Color displayColor = context.deserialize(jsonObject.get("displayColor"), Color.class);
-            
-            Task task = new Task(title, description, dueDate, priority, displayColor);
+            List<String> init_tag = new ArrayList<>();
+            init_tag.add("Default");
+            Task task = new Task(title, description, dueDate, priority, init_tag, displayColor);
             
             // 设置其他属性
             task.setIsRecurring(jsonObject.get("isRecurring").getAsBoolean());

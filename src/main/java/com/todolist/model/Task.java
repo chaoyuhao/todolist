@@ -50,12 +50,13 @@ public class Task {
     private Color displayColor;
     
     // 构造函数
-    public Task(String title, String description, Date dueDate, int priority, Color displayColor) {
+    public Task(String title, String description, Date dueDate, int priority, List<String> tags, Color displayColor) {
         this.taskId = UUID.randomUUID().toString(); // 生成唯一ID
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.tags = tags;
         this.displayColor = displayColor;
         this.isRecurring = false;
         this.isCompleted = false;
@@ -122,6 +123,7 @@ public class Task {
                 ", dueDate=" + dueDate +
                 ", isCompleted=" + isCompleted +
                 ", priority=" + priority +
+                ", tags=" + tags +
                 '}';
     }
 
