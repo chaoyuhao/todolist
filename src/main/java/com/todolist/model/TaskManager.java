@@ -228,15 +228,14 @@ public class TaskManager {
     }
 
     public List<Task> getTags(List<String> tags) {
-        if(tags.size() > 1) {
-            // TODO : 加入多个标签筛选的功能
-            System.out.println("not impl");
+        if(tags == null || tags.isEmpty()) {
+            return new ArrayList<>();
         }
-        loadTasks();
+        
         String name = tags.get(0);
-        return tasks.stream().filter(task -> {
-                return task.getTags().contains(name);
-            }).collect(Collectors.toList());
+        return tasks.stream()
+            .filter(task -> task.getTags() != null && task.getTags().contains(name))
+            .collect(Collectors.toList());
     }
 
     public void completeTask(String taskId) {
