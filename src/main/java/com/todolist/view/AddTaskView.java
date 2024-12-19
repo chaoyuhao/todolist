@@ -31,6 +31,10 @@ public class AddTaskView extends Stage {
     private TextField recurringDaysField;
     private Slider prioritySlider;
 
+    private static final int MAX_TITLE_LENGTH = 100;
+    private static final int MAX_DESCRIPTION_LENGTH = 500;
+    private static final int MAX_TAG_LENGTH = 50;
+
     public AddTaskView() {
         this.tags = new ArrayList<>();
         initializeComponents();
@@ -196,13 +200,29 @@ public class AddTaskView extends Stage {
     }
 
     private void addTag(String tag) {
-        if (tag != null && !tag.trim().isEmpty() && tags.size() < 5 && !tags.contains(tag)) {
-            System.out.println("add tags->" + tag);
-            tags.add(tag);
-            updateTagsDisplay();
-        }else {
-            showAlert("非法标签");
+        if (tag == null || tag.trim().isEmpty()) {
+            showAlert("标签不能为空");
+            return;
         }
+        if (tag.length() > MAX_TAG_LENGTH) {
+            showAlert("标签长度不能超过" + MAX_TAG_LENGTH + "个字符");
+            return;
+        }
+        if (!tag.matches("[a-zA-Z0-9\\u4e00-\\u9fa5\\-_]+")) {
+            showAlert("标签只能包含字母、数字、中文、下划线和横线");
+            return;
+        }
+        if (tags.size() >= 5) {
+            showAlert("最多只能添加5个标签");
+            return;
+        }
+        if (tags.contains(tag)) {
+            showAlert("标签已存在");
+            return;
+        }
+        
+        tags.add(tag);
+        updateTagsDisplay();
     }
 
     private void updateTagsDisplay() {
@@ -221,17 +241,37 @@ public class AddTaskView extends Stage {
     }
 
     private void createTask() {
-        if (titleField.getText().trim().isEmpty()) {
+        String title = titleField.getText().trim();
+        String description = descriptionArea.getText().trim();
+        
+        // 标题验证
+        if (title.isEmpty()) {
             showAlert("请输入任务标题");
             return;
         }
-
-        // 验证循环天数
+        if (title.length() > MAX_TITLE_LENGTH) {
+            showAlert("标题长度不能超过" + MAX_TITLE_LENGTH + "个字符");
+            return;
+        }
+        
+        // 描述验证
+        if (description.length() > MAX_DESCRIPTION_LENGTH) {
+            showAlert("描述长度不能超过" + MAX_DESCRIPTION_LENGTH + "个字符");
+            return;
+        }
+        
+        // 日期时间验证
+        if (datePicker.getValue() == null || hourComboBox.getValue() == null || minuteComboBox.getValue() == null) {
+            showAlert("请选择完整的日期和时间");
+            return;
+        }
+        
+        // 循环任务验证
         if (isRecurringCheckBox.isSelected() && recurringDaysField.getText().trim().isEmpty()) {
             showAlert("请输入循环天数");
             return;
         }
-
+        
         // 获取优先级，默认为0
         int priority = (int) prioritySlider.getValue(); // 从滑动条获取优先级
 

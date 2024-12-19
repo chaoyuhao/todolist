@@ -158,28 +158,73 @@ public class TaskManager {
         @Override
         public Task deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) 
             throws JsonParseException {
-            JsonObject jsonObject = json.getAsJsonObject();
+            JsonObject obj = json.getAsJsonObject();
             
-            String title = jsonObject.get("title").getAsString();
-            String description = jsonObject.get("description").getAsString();
-            Date dueDate = context.deserialize(jsonObject.get("dueDate"), Date.class);
-            int priority = jsonObject.get("priority").getAsInt();
-            Color displayColor = context.deserialize(jsonObject.get("displayColor"), Color.class);
-            List<String> init_tag = new ArrayList<>();
-            init_tag.add("Default");
-            Task task = new Task(title, description, dueDate, priority, init_tag, displayColor);
+            // 必需字段验证
+            if (!obj.has("title") || !obj.has("dueDate")) {
+                throw new JsonParseException("Missing required fields: title and dueDate are required");
+            }
             
-            // 设置其他属性
-            task.setIsRecurring(jsonObject.get("isRecurring").getAsBoolean());
-            task.setIsCompleted(jsonObject.get("isCompleted").getAsBoolean());
+            // 安全的类型转换
+            String title = getAsStringOrDefault(obj, "title", "Untitled");
+            String description = getAsStringOrDefault(obj, "description", "");
+            Date dueDate = parseDateSafely(obj.get("dueDate"));
+            int priority = getAsIntOrDefault(obj, "priority", 0);
+            List<String> tags = parseTagsSafely(obj.get("tags"));
+            Color color = parseColorSafely(obj.get("displayColor"));
             
-            if (jsonObject.has("tags")) {
-                Type listType = new TypeToken<List<String>>(){}.getType();
-                List<String> tags = context.deserialize(jsonObject.get("tags"), listType);
-                task.setTags(tags);
+            Task task = new Task(title, description, dueDate, priority, tags, color);
+            
+            // 设置其他可选属性
+            if (obj.has("isRecurring")) {
+                task.setIsRecurring(obj.get("isRecurring").getAsBoolean());
+            }
+            if (obj.has("isCompleted")) {
+                task.setIsCompleted(obj.get("isCompleted").getAsBoolean());
             }
             
             return task;
+        }
+        
+        private String getAsStringOrDefault(JsonObject obj, String key, String defaultValue) {
+            return obj.has(key) && !obj.get(key).isJsonNull() 
+                ? obj.get(key).getAsString() 
+                : defaultValue;
+        }
+        
+        private int getAsIntOrDefault(JsonObject obj, String key, int defaultValue) {
+            return obj.has(key) && !obj.get(key).isJsonNull() 
+                ? obj.get(key).getAsInt() 
+                : defaultValue;
+        }
+        
+        private Date parseDateSafely(JsonElement element) {
+            try {
+                return new Date(element.getAsLong());
+            } catch (Exception e) {
+                return new Date(); // 返回当前时间作为默认值
+            }
+        }
+        
+        private List<String> parseTagsSafely(JsonElement element) {
+            List<String> tags = new ArrayList<>();
+            if (element != null && element.isJsonArray()) {
+                JsonArray array = element.getAsJsonArray();
+                for (JsonElement tag : array) {
+                    if (!tag.isJsonNull() && tag.getAsString().trim().length() > 0) {
+                        tags.add(tag.getAsString());
+                    }
+                }
+            }
+            return tags;
+        }
+        
+        private Color parseColorSafely(JsonElement element) {
+            try {
+                return Color.web(element.getAsString());
+            } catch (Exception e) {
+                return Color.RED; // 默认颜色
+            }
         }
     }
 
