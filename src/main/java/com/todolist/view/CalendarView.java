@@ -54,7 +54,7 @@ public class CalendarView extends BorderPane {
 
         // 设置星期标题
         String[] weekDays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        for (int i = 0; i < weekDays.length; i++) {
+        for (int i = 0; i < weekDays.length + 1; i++) {
             Label dayLabel = new Label(weekDays[i]);
             calendarGrid.add(dayLabel, i, 0); // 添加星期标题
         }

@@ -88,9 +88,9 @@ public class AddTaskView extends Stage {
         recurringDaysField.getStyleClass().add("task-input");
 
         // 设置循环任务复选框的监听器
-        isRecurringCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            recurringDaysField.setDisable(!newVal);
-        });
+        isRecurringCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> 
+            recurringDaysField.setDisable(!newVal)
+        );
 
         // 优先级滑动条
         prioritySlider = new Slider(0, 10, 0); // 设置滑动条范围为0到10，初始值为0
